@@ -1,27 +1,31 @@
-bool solve(vector<int> adj[], int index, vector<bool> &vis, vector<bool> &recSt)
-{
-    vis[index] = true;
-    recSt[index] = true;
+class Solution {
+    vector<int> vis;
+    bool solve(int &V, vector<int> adj[], int cur) {
+        if (vis[cur] == 1)
+            return true;
 
-    for (auto i : adj[index])
-    {
-        if (vis[i] == false && solve(adj, i, vis, recSt))
-            return true;
-        else if (recSt[i] == true)
-            return true;
-    }
-    recSt[index] = false;
-    return false;
-}
+        vis[cur] = 1;
+        for (int i: adj[cur])
+        {
+            if (vis[cur] != 2 && solve(V, adj, i))
+                return true;
+        }
 
-bool isCyclic(int V, vector<int> adj[])
-{
-    vector<bool> vis(V, false);
-    vector<bool> recSt(V, false);
-    for (int i = 0; i < V; i++)
-    {
-        if (!vis[i] && solve(adj, i, vis, recSt))
-            return true;
+        vis[cur] = 2;
+        return false;
     }
-    return false;
-}
+
+  public:
+    // Function to detect cycle in a directed graph.
+    bool isCyclic(int V, vector<int> adj[]) {
+        // code here
+        vis = vector<int> (V, 0);
+        for (int i = 0; i < V; i++)
+        {
+            if (vis[i] != 2 && solve(V, adj, i)) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
